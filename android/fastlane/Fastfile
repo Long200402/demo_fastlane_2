@@ -33,7 +33,7 @@ platform :android do
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     gradle(task: "clean assembleRelease")
-    git_add
+    git_add(shell_escape: true)
     git_commit(path: "", message: "Version Bump")
     push_to_git_remote(
       remote: "https://github.com/Long200402/demo_fastlane_2.git",         # optional, default: "origin"
