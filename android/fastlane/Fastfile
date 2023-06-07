@@ -1,0 +1,50 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "clean assembleRelease")
+    crashlytics
+  
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+    gradle(task: "clean assembleRelease")
+    git_add
+    git_commit(path: "", message: "Version Bump")
+    push_to_git_remote(
+      remote: "https://github.com/Long200402/demo_fastlane_2.git",         # optional, default: "origin"
+      local_branch: "main",  # optional, aliased by "branch", default is set to current branch
+      remote_branch: "main", # optional, default is set to local_branch
+      force: true,    # optional, default: false
+      force_with_lease: true,   # optional, default: false
+      tags: false,    # optional, default: true
+      no_verify: true,# optional, default: false
+      set_upstream: true        # optional, default: false
+    )
+#     upload_to_play_store
+  end
+end
